@@ -1,0 +1,28 @@
+# Kompajlirani Java fajlovi
+*.class
+
+# Build folderi
+bin/
+out/
+target/
+
+# VS Code postavke
+.vscode/
+
+# IntelliJ IDEA postavke
+.idea/
+*.iml
+
+# Eclipse postavke
+.project
+.classpath
+.settings/
+
+# Sistemski fajlovi
+.DS_Store
+Thumbs.db
+
+# Log fajlovi i temp fajlovi
+logs/
+*.log
+*.tmp

@@ -827,91 +827,64 @@ public class Solution {
      * respectively.
      */
 
-    public boolean isValidQueens(List<List<String>> queens, int row, int column) {
-        int n = queens.size();
+    public List<List<String>> solveNQueens(int n) {
+        List<List<String>> results = new ArrayList<>();
+        char[][] board = new char[n][n];
 
-        // Check row
-        for (int i = 0; i < n; i++) {
-            if (i != row && queens.get(i).get(column).equals("Q")) {
-                return false;
-            }
-        }
-
-        // Check column
-        for (int j = 0; j < n; j++) {
-            if (j != column && queens.get(row).get(j).equals("Q")) {
-                return false;
-            }
-        }
-
-        // Check left diagonal
-        int lijeva_dijagonala_x = row - Math.min(row, column);
-        int lijeva_dijagonala_y = column - Math.min(row, column);
-        while (lijeva_dijagonala_x < n && lijeva_dijagonala_y < n) {
-            if (lijeva_dijagonala_x != row && lijeva_dijagonala_y != column &&
-                    queens.get(lijeva_dijagonala_x).get(lijeva_dijagonala_y).equals("Q")) {
-                return false;
-            }
-            lijeva_dijagonala_x++;
-            lijeva_dijagonala_y++;
-        }
-
-        // Check right diagonal
-        int desna_dijagonala_x = row + Math.min(n - 1 - row, column);
-        int desna_dijagonala_y = column - Math.min(n - 1 - row, column);
-        while (desna_dijagonala_x >= 0 && desna_dijagonala_y < n) {
-            if (desna_dijagonala_x != row && desna_dijagonala_y != column &&
-                    queens.get(desna_dijagonala_x).get(desna_dijagonala_y).equals("Q")) {
-                return false;
-            }
-            desna_dijagonala_x--;
-            desna_dijagonala_y++;
-        }
-
-        return true;
-    }
-
-    public List<List<String>> postaviKraljicu(List<List<String>> queens, int row, int column) {
-        queens.get(row).set(column, "Q");
-        return queens;
-    }
-
-    public void solve(int row, int n, List<List<String>> board, List<List<List<String>>> results) {
-        if (row == n) {
-            // Kopiraj trenutnu tablu u rezultate
-            List<List<String>> solvedBoard = new ArrayList<>();
-            for (List<String> r : board) {
-                solvedBoard.add(new ArrayList<>(r));
-            }
-            results.add(solvedBoard);
-            return;
-        }
-
-        for (int col = 0; col < n; col++) {
-            if (isValidQueens(board, row, col)) {
-                board.get(row).set(col, "Q");
-                solve(row + 1, n, board, results);
-                board.get(row).set(col, "."); // Backtrack
-            }
-        }
-    }
-
-    public List<List<List<String>>> solveNQueens(int n) {
-        List<List<List<String>>> results = new ArrayList<>();
-        List<List<String>> board = new ArrayList<>();
-
-        // Inicijalizacija table sa praznim poljima (".")
-        for (int i = 0; i < n; i++) {
-            List<String> row = new ArrayList<>();
-            for (int j = 0; j < n; j++) {
-                row.add(".");
-            }
-            board.add(row);
+        for (char[] row : board) {
+            Arrays.fill(row, '.'); 
         }
 
         solve(0, n, board, results);
         return results;
     }
+
+    private void solve(int row, int n, char[][] board, List<List<String>> results) {
+        if (row == n) {
+            results.add(convertBoard(board)); 
+            return;
+        }
+
+        for (int col = 0; col < n; col++) {
+            if (isValid(board, row, col, n)) {
+                board[row][col] = 'Q'; 
+                solve(row + 1, n, board, results);
+                board[row][col] = '.'; 
+            }
+        }
+    }
+
+    private boolean isValid(char[][] board, int row, int col, int n) {
+        // Check column
+        for (int i = 0; i < row; i++) {
+            if (board[i][col] == 'Q')
+                return false;
+        }
+
+        // Check left diagonal
+        for (int i = row - 1, j = col - 1; i >= 0 && j >= 0; i--, j--) {
+            if (board[i][j] == 'Q')
+                return false;
+        }
+
+        // Check right diagonal
+        for (int i = row - 1, j = col + 1; i >= 0 && j < n; i--, j++) {
+            if (board[i][j] == 'Q')
+                return false;
+        }
+
+        return true;
+    }
+
+    private List<String> convertBoard(char[][] board) {
+        List<String> result = new ArrayList<>();
+        for (char[] row : board) {
+            result.add(new String(row));
+        }
+        return result;
+    }
+
+    
     
     
 } 

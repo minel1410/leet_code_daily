@@ -781,9 +781,10 @@ public class Solution {
             return -1;
         
         if(nums.size() == 3) {
-            if((nums.get(0) == 0 && nums.get(1) == 0 && nums.get(2) == 0 )
-            || (nums.get(0) == 1 && nums.get(1) == 1 && nums.get(2) == 1))
+            if(nums.get(0) == 0 && nums.get(1) == 0 && nums.get(2) == 0 )
                 return k + 1;
+            else if(nums.get(0) == 1 && nums.get(1) == 1 && nums.get(2) == 1)
+                return k;
         }
 
         if(nums.get(0) == 1)
@@ -811,6 +812,105 @@ public class Solution {
 
 
 
+    }
+
+
+    /*
+     * The n-queens puzzle is the problem of placing n queens on an n x n chessboard
+     * such that no two queens attack each other.
+     * 
+     * Given an integer n, return all distinct solutions to the n-queens puzzle. You
+     * may return the answer in any order.
+     * 
+     * Each solution contains a distinct board configuration of the n-queens'
+     * placement, where 'Q' and '.' both indicate a queen and an empty space,
+     * respectively.
+     */
+
+    public boolean isValidQueens(List<List<String>> queens, int row, int column) {
+        int n = queens.size();
+
+        // Check row
+        for (int i = 0; i < n; i++) {
+            if (i != row && queens.get(i).get(column).equals("Q")) {
+                return false;
+            }
+        }
+
+        // Check column
+        for (int j = 0; j < n; j++) {
+            if (j != column && queens.get(row).get(j).equals("Q")) {
+                return false;
+            }
+        }
+
+        // Check left diagonal
+        int lijeva_dijagonala_x = row - Math.min(row, column);
+        int lijeva_dijagonala_y = column - Math.min(row, column);
+        while (lijeva_dijagonala_x < n && lijeva_dijagonala_y < n) {
+            if (lijeva_dijagonala_x != row && lijeva_dijagonala_y != column &&
+                    queens.get(lijeva_dijagonala_x).get(lijeva_dijagonala_y).equals("Q")) {
+                return false;
+            }
+            lijeva_dijagonala_x++;
+            lijeva_dijagonala_y++;
+        }
+
+        // Check right diagonal
+        int desna_dijagonala_x = row + Math.min(n - 1 - row, column);
+        int desna_dijagonala_y = column - Math.min(n - 1 - row, column);
+        while (desna_dijagonala_x >= 0 && desna_dijagonala_y < n) {
+            if (desna_dijagonala_x != row && desna_dijagonala_y != column &&
+                    queens.get(desna_dijagonala_x).get(desna_dijagonala_y).equals("Q")) {
+                return false;
+            }
+            desna_dijagonala_x--;
+            desna_dijagonala_y++;
+        }
+
+        return true;
+    }
+
+    public List<List<String>> postaviKraljicu(List<List<String>> queens, int row, int column) {
+        queens.get(row).set(column, "Q");
+        return queens;
+    }
+
+    public void solve(int row, int n, List<List<String>> board, List<List<List<String>>> results) {
+        if (row == n) {
+            // Kopiraj trenutnu tablu u rezultate
+            List<List<String>> solvedBoard = new ArrayList<>();
+            for (List<String> r : board) {
+                solvedBoard.add(new ArrayList<>(r));
+            }
+            results.add(solvedBoard);
+            return;
+        }
+
+        for (int col = 0; col < n; col++) {
+            if (isValidQueens(board, row, col)) {
+                board.get(row).set(col, "Q");
+                solve(row + 1, n, board, results);
+                board.get(row).set(col, "."); // Backtrack
+            }
+        }
+    }
+
+    public List<List<List<String>>> solveNQueens(int n) {
+        List<List<List<String>>> results = new ArrayList<>();
+        List<List<String>> board = new ArrayList<>();
+
+        // Inicijalizacija table sa praznim poljima (".")
+        for (int i = 0; i < n; i++) {
+            List<String> row = new ArrayList<>();
+            for (int j = 0; j < n; j++) {
+                row.add(".");
+            }
+            board.add(row);
+        }
+
+        solve(0, n, board, results);
+        return results;
     }
     
     

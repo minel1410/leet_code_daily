@@ -690,7 +690,7 @@ public class Solution {
         return true;
     }
 
-    public static int pomocna(List<Integer> lista, int k) {
+    public static int pomocna1(List<Integer> lista, int k) {
         int pivot = lista.get(0);
         List<Integer> manji = new ArrayList<>();
         List<Integer> veci = new ArrayList<>();
@@ -706,9 +706,9 @@ public class Solution {
             return pivot;
 
         if (veci.size() >= k)
-            return pomocna(veci, k);
+            return pomocna1(veci, k);
 
-        return pomocna(manji, k - veci.size() - 1);
+        return pomocna1(manji, k - veci.size() - 1);
     }
 
     public static int findKthLargest(int[] nums, int k) {
@@ -716,7 +716,7 @@ public class Solution {
         for (int num : nums)
             lista.add(num);
 
-        return pomocna(lista, k);
+        return pomocna1(lista, k);
     }
 
     public int longestNiceSubarray(int[] nums) {
@@ -761,4 +761,57 @@ public class Solution {
 
         return k; 
     }
-}
+
+    /*
+     * You are given a binary array nums.
+     * 
+     * You can do the following operation on the array any number of times (possibly
+     * zero):
+     * 
+     * Choose any 3 consecutive elements from the array and flip all of them.
+     * Flipping an element means changing its value from 0 to 1, and from 1 to 0.
+     * 
+     * Return the minimum number of operations required to make all elements in nums
+     * equal to 1. If it is impossible, return -1
+     */
+
+    public int pomocna2(List<Integer>nums, int k) {
+
+        if(nums.size() < 3)
+            return -1;
+        
+        if(nums.size() == 3) {
+            if((nums.get(0) == 0 && nums.get(1) == 0 && nums.get(2) == 0 )
+            || (nums.get(0) == 1 && nums.get(1) == 1 && nums.get(2) == 1))
+                return k + 1;
+        }
+
+        if(nums.get(0) == 1)
+            return pomocna2(nums.subList(1, nums.size()), k);
+
+        nums.set(1, nums.get(1) ^ 1);
+        nums.set(2, nums.get(2) ^ 1);
+
+        return pomocna2(nums.subList(1, nums.size()), k + 1);
+
+
+    }
+    
+
+
+     public int minOperations(int[] nums) {
+
+        List<Integer>lista = new ArrayList<>();
+        int k = 0;
+
+        for(int i = 0; i < nums.length; i++)
+            lista.add(nums[i]);
+
+        return pomocna2(lista, k);
+
+
+
+    }
+    
+    
+} 

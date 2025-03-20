@@ -1,4 +1,7 @@
 
+package src;
+
+
 
 import java.lang.Math;
 import java.util.*;
@@ -978,5 +981,203 @@ public class Solution {
 
         return rez;
     }
+
+
+    /*
+     * HARD
+     * There is an undirected weighted graph with n vertices labeled from 0 to n -
+     * 1.
+     * 
+     * You are given the integer n and an array edges, where edges[i] = [ui, vi, wi]
+     * indicates that there is an edge between vertices ui and vi with a weight of
+     * wi.
+     * 
+     * A walk on a graph is a sequence of vertices and edges. The walk starts and
+     * ends with a vertex, and each edge connects the vertex that comes before it
+     * and the vertex that comes after it. It's important to note that a walk may
+     * visit the same edge or vertex more than once.
+     * 
+     * The cost of a walk starting at node u and ending at node v is defined as the
+     * bitwise AND of the weights of the edges traversed during the walk. In other
+     * words, if the sequence of edge weights encountered during the walk is w0, w1,
+     * w2, ..., wk, then the cost is calculated as w0 & w1 & w2 & ... & wk, where &
+     * denotes the bitwise AND operator.
+     * 
+     * You are also given a 2D array query, where query[i] = [si, ti]. For each
+     * query, you need to find the minimum cost of the walk starting at vertex si
+     * and ending at vertex ti. If there exists no such walk, the answer is -1.
+     * 
+     * Return the array answer, where answer[i] denotes the minimum cost of a walk
+     * for query i.
+     */
+    /*
+     public static class Grana {
+        int a, b, w;
+
+        Grana(int a1, int b1, int w1) {
+            a = a1;
+            b = b1;
+            w = w1;
+        }
+    }
+
+    public static class DSU {
+
+        public int[] rank, parent;
+
+        public DSU(int[][] graf, int broj_cvorova) {
+            rank = new int[broj_cvorova];
+            parent = new int[broj_cvorova];
+
+            // Inicijalizacija ranka i parenta
+            for (int i = 0; i < broj_cvorova; i++) {
+                rank[i] = 1;
+                parent[i] = i;
+            }
+
+            // Kreiranje DSU strukture spajanjem svih grana
+            for (int[] edge : graf) {
+                union(new Grana(edge[0], edge[1], edge[2]));
+            }
+        }
+
+        public int find(int x) {
+            if (parent[x] != x) {
+                parent[x] = find(parent[x]); // Path compression
+            }
+            return parent[x];
+        }
+
+        public void union(Grana g) {
+            int rootA = find(g.a);
+            int rootB = find(g.b);
+
+            if (rootA != rootB) {
+                if (rank[rootA] > rank[rootB]) {
+                    parent[rootB] = rootA;
+                } else if (rank[rootA] < rank[rootB]) {
+                    parent[rootA] = rootB;
+                } else {
+                    parent[rootB] = rootA;
+                    rank[rootA]++;
+                }
+            }
+        }
+    }
+
+    public static class Graph {
+        Map<Integer, List<int[]>> graph = new HashMap<>();
+
+        Graph(int[][] edges) {
+            for (int[] edge : edges) {
+                int u = edge[0], v = edge[1], w = edge[2];
+                graph.putIfAbsent(u, new ArrayList<>());
+                graph.putIfAbsent(v, new ArrayList<>());
+                graph.get(u).add(new int[] { v, w });
+                graph.get(v).add(new int[] { u, w });
+            }
+        }
+
+        public void printGraph() {
+            for (var entry : graph.entrySet()) {
+                System.out.print(entry.getKey() + " -> ");
+                for (int[] edge : entry.getValue()) {
+                    System.out.print("[" + edge[0] + ", " + edge[1] + "] ");
+                }
+                System.out.println();
+            }
+        }
+
+
+        
+    }
+
+    public int[] minimumCost(int n, int[][] edges, int[][] query) {
+        DSU dsu = new DSU(edges, n);
+
+
+        
+
+        int[] rez = new int[query.length];
+
+        for (int i = 0; i < query.length; i++) {
+            Grana g = new Grana(query[i][0], query[i][1], 0);
+            if (dsu.find(g.a) != dsu.find(g.b))
+                rez[i] = -1;
+       
+        }
+        return rez;
+    }*/
+
+
+    //NOTE: this code was made with the help of code generation tools
+    public static class DSU {
+        public int[] rank, parent, andValue;
+
+        public DSU(int n) {
+            rank = new int[n];
+            parent = new int[n];
+            andValue = new int[n];
+            Arrays.fill(andValue, -1); // Initialize to all bits set (bitwise AND starts with all 1s)
+            for (int i = 0; i < n; i++) {
+                parent[i] = i;
+                rank[i] = 1;
+            }
+        }
+
+        public int find(int x) {
+            if (parent[x] != x) {
+                parent[x] = find(parent[x]); // Path compression
+            }
+            return parent[x];
+        }
+
+        public void union(int u, int v, int weight) {
+            int rootU = find(u);
+            int rootV = find(v);
+            if (rootU != rootV) {
+                if (rank[rootU] > rank[rootV]) {
+                    parent[rootV] = rootU;
+                    andValue[rootU] &= andValue[rootV] & weight;
+                } else {
+                    parent[rootU] = rootV;
+                    andValue[rootV] &= andValue[rootU] & weight;
+                }
+                if (rank[rootU] == rank[rootV]) {
+                    rank[rootV]++;
+                }
+            } else {
+                // Already in the same component, update the andValue with the current edge's
+                // weight
+                andValue[rootU] &= weight;
+            }
+        }
+    }
+
+    public int[] minimumCost(int n, int[][] edges, int[][] query) {
+        DSU dsu = new DSU(n);
+        for (int[] edge : edges) {
+            int u = edge[0];
+            int v = edge[1];
+            int w = edge[2];
+            dsu.union(u, v, w);
+        }
+
+        int[] result = new int[query.length];
+        for (int i = 0; i < query.length; i++) {
+            int s = query[i][0];
+            int t = query[i][1];
+            int rootS = dsu.find(s);
+            int rootT = dsu.find(t);
+            if (rootS != rootT) {
+                result[i] = -1;
+            } else {
+                result[i] = dsu.andValue[rootS];
+            }
+        }
+        return result;
+    }
+
+    
     
 } 

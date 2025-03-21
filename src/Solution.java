@@ -1240,6 +1240,58 @@ public class Solution {
         
     }
 
+    /*
+     * You have information about n different recipes. You are given a string array
+     * recipes and a 2D string array ingredients. The ith recipe has the name
+     * recipes[i], and you can create it if you have all the needed ingredients from
+     * ingredients[i]. A recipe can also be an ingredient for other recipes, i.e.,
+     * ingredients[i] may contain a string that is in recipes.
+     * 
+     * You are also given a string array supplies containing all the ingredients
+     * that you initially have, and you have an infinite supply of all of them.
+     * 
+     * Return a list of all the recipes that you can create. You may return the
+     * answer in any order.
+     * 
+     * Note that two recipes may contain each other in their ingredients.
+     */
+    public List<String> findAllRecipes(String[] recipes, List<List<String>> ingredients, String[] supplies) {
+
+        HashSet<String> zalihe = new HashSet<>();
+        List<String>rez = new ArrayList<>();
+
+        List<String> recepti = Arrays.asList(recipes);
+
+        boolean ponovi = true;
+
+        while(ponovi) {
+            int zalihe_prije_duzina = zalihe.size();
+            ponovi = false;
+            for (int i = 0; i < supplies.length; i++) {
+                zalihe.add(supplies[i]);
+            }
+            for (int i = 0; i < recepti.size(); i++) {
+                boolean valid = true;
+                for (int j = 0; j < ingredients.get(i).size(); j++) {
+                    if (!zalihe.contains(ingredients.get(i).get(j))) {
+                        valid = false;
+                    }
+
+                }
+                if (valid) {
+                    recepti.remove(i);
+                    ingredients.remove(i);
+                    rez.add(recepti.get(i));
+                    zalihe.add(recepti.get(i));
+                }
+            }
+            int zalihe_poslije_duzina = zalihe.size();
+            if(zalihe_poslije_duzina > zalihe_prije_duzina)
+                ponovi = true;
+        }
+        return rez;
+    }
+
     
     
 } 

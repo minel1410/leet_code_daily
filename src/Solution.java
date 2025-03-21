@@ -1178,6 +1178,68 @@ public class Solution {
         return result;
     }
 
+
+
+    /*
+     * A sequence x1, x2, ..., xn is Fibonacci-like if:
+     * 
+     * n >= 3
+     * xi + xi+1 == xi+2 for all i + 2 <= n
+     * Given a strictly increasing array arr of positive integers forming a
+     * sequence, return the length of the longest Fibonacci-like subsequence of arr.
+     * If one does not exist, return 0.
+     * 
+     * A subsequence is derived from another sequence arr by deleting any number of
+     * elements (including none) from arr, without changing the order of the
+     * remaining elements. For example, [3, 5, 8] is a subsequence of [3, 4, 5, 6,
+     * 7, 8].
+     */
+    // I tried by finding first n fibonnci numbers but and finding 
+    // lcs of that array and the given array
+    // but I realised that doesnt work
+    public static int[] fibbonaci(int n) {
+        int[] rez = new int[n];
+
+        rez[0] = 1;
+        rez[1] = 1;
+
+        for(int i = 2; i < n; i++)
+            rez[i] = rez[i-1] + rez[i-2];
+
+        return rez;
+
+    }
+
+    public static int lcs(int[] arr1, int[] arr2) {
+
+        int m = arr1.length + 1, n = arr2.length + 1;
+
+        int[][] dp = new int[m][n];
+
+        for(int i = 0; i < m; i++)
+            dp[i][0] = 0;
+        
+        for(int j = 0; j < n; j++)
+            dp[0][j] = 0;
+        
+        for(int i = 1; i < m; i++) {
+            for(int j = 1; j < n; j++) {
+                if(arr1[i-1] == arr2[j-1])
+                    dp[i][j] = dp[i-1][j-1] + 1;
+                else
+                    dp[i][j] = Math.max(dp[i-1][j], dp[i][j-1]);
+            }
+        }
+
+        return dp[m-1][n-1];
+
+    }
+
+    public static int lenLongestFibSubseq(int[] arr) {
+
+        
+    }
+
     
     
 } 

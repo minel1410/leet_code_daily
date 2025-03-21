@@ -7,21 +7,10 @@ public class App {
     public static void main(String[] args) throws Exception {
         
 
-        int[][] graf = {
-                { 0, 2, 7 }, { 0, 1, 15 }, { 1, 2, 6 }, { 1, 2, 1}
+    int niz[] = {1,2,3,4,5,6,7,8};
 
-        };
+    System.out.println(Solution.lenLongestFibSubseq(niz));
 
 
-       Solution.Graph g = new Solution.Graph(graf);
-
-       
-    g.printGraph();
-
-    List<List<Integer>> paths = g.bfsAllPaths(0, 3);
-
-        for (List<Integer> path : paths) {
-            System.out.println(path);
-        }
 }
 }

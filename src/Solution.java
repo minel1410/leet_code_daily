@@ -1235,10 +1235,6 @@ public class Solution {
 
     }
 
-    public static int lenLongestFibSubseq(int[] arr) {
-
-        
-    }
 
     /*
      * You have information about n different recipes. You are given a string array
@@ -1260,7 +1256,7 @@ public class Solution {
         HashSet<String> zalihe = new HashSet<>();
         List<String>rez = new ArrayList<>();
 
-        List<String> recepti = Arrays.asList(recipes);
+        List<String> recepti = new ArrayList<>(Arrays.asList(recipes));;
 
         boolean ponovi = true;
 
@@ -1278,11 +1274,11 @@ public class Solution {
                     }
 
                 }
-                if (valid) {
-                    recepti.remove(i);
-                    ingredients.remove(i);
+                if (valid) {                   
                     rez.add(recepti.get(i));
                     zalihe.add(recepti.get(i));
+                    recepti.remove(i);
+                    ingredients.remove(i);
                 }
             }
             int zalihe_poslije_duzina = zalihe.size();
@@ -1292,6 +1288,95 @@ public class Solution {
         return rez;
     }
 
-    
-    
-} 
+
+    /*
+     * You are given an integer n. There is an undirected graph with n vertices,
+     * numbered from 0 to n - 1. You are given a 2D integer array edges where
+     * edges[i] = [ai, bi] denotes that there exists an undirected edge connecting
+     * vertices ai and bi.
+     * 
+     * Return the number of complete connected components of the graph.
+     * 
+     * A connected component is a subgraph of a graph in which there exists a path
+     * between any two vertices, and no vertex of the subgraph shares an edge with a
+     * vertex outside of the subgraph.
+     * 
+     * A connected component is said to be complete if there exists an edge between
+     * every pair of its vertices.
+     */
+    public static int countCompleteComponents(int n, int[][] edges) {
+        DSU2 dsu = new DSU2(n);
+        Map<Integer, List<Integer>> graph = new HashMap<>();
+
+        for (int i = 0; i < n; i++) {
+            graph.put(i, new ArrayList<>());
+        }
+
+        for (int[] edge : edges) {
+            dsu.union(edge[0], edge[1]);
+            graph.get(edge[0]).add(edge[1]);
+            graph.get(edge[1]).add(edge[0]);
+        }
+
+        Map<Integer, List<Integer>> components = new HashMap<>();
+        for (int i = 0; i < n; i++) {
+            int root = dsu.find(i);
+            components.putIfAbsent(root, new ArrayList<>());
+            components.get(root).add(i);
+        }
+
+        int completeCount = 0;
+        for (List<Integer> component : components.values()) {
+            if (isComplete(component, graph)) {
+                completeCount++;
+            }
+        }
+
+        return completeCount;
+    }
+
+    private static boolean isComplete(List<Integer> component, Map<Integer, List<Integer>> graph) {
+        int size = component.size();
+        for (int node : component) {
+            if (graph.get(node).size() != size - 1) {
+                return false;
+            }
+        }
+        return true;
+    }
+
+    static class DSU2 {
+        int[] parent, rank;
+
+        public DSU2(int n) {
+            parent = new int[n];
+            rank = new int[n];
+            for (int i = 0; i < n; i++) {
+                parent[i] = i;
+                rank[i] = 1;
+            }
+        }
+
+        public int find(int x) {
+            if (parent[x] != x) {
+                parent[x] = find(parent[x]);
+            }
+            return parent[x];
+        }
+
+        public void union(int u, int v) {
+            int rootU = find(u);
+            int rootV = find(v);
+            if (rootU != rootV) {
+                if (rank[rootU] > rank[rootV]) {
+                    parent[rootV] = rootU;
+                } else if (rank[rootU] < rank[rootV]) {
+                    parent[rootU] = rootV;
+                } else {
+                    parent[rootU] = rootV;
+                    rank[rootV]++;
+                }
+            }
+        }
+    }
+}

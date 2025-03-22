@@ -7,9 +7,9 @@ public class App {
     public static void main(String[] args) throws Exception {
         
 
-    int niz[] = {1,2,3,4,5,6,7,8};
+    int graf[][] = {{0,1},{0,1},{1,2},{3,4}};
 
-    System.out.println(Solution.lenLongestFibSubseq(niz));
+    Solution.countCompleteComponents(6, graf);
 
 
 }

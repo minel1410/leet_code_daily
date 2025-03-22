@@ -1421,4 +1421,79 @@ public class Solution {
 
     }
 
+    /*
+     * You are given a 0-indexed integer array nums representing the score of
+     * students in an exam. The teacher would like to form one non-empty group of
+     * students with maximal strength, where the strength of a group of students of
+     * indices i0, i1, i2, ... , ik is defined as nums[i0] * nums[i1] * nums[i2] *
+     * ... * nums[ik​].
+     * 
+     * Return the maximum strength of a group the teacher can create.
+     */
+    public long maxStrength(int[] nums) {
+
+        int brojac_neg = 0;
+        long rez = 1;
+        boolean ima_veci_od_nule = false;
+
+
+        
+
+        if(nums.length == 1 && nums[0] < 0)
+            return nums[0];
+
+        for(int i = 0; i < nums.length; i++){
+            if (nums[i] > 0)
+                ima_veci_od_nule = true;
+            if (nums[i] < 0)
+                brojac_neg++;
+        }
+
+
+        
+            
+
+        if(brojac_neg % 2 == 0) {
+            for(int i = 0; i < nums.length; i++) {
+                if(nums[i] != 0)
+                    rez *= nums[i];
+            }
+        }
+
+        else {
+
+            int najveci_neg = -999999;
+
+            for(int i = 0; i < nums.length; i++) {
+                if(nums[i] < 0) {
+                    najveci_neg = Math.max(najveci_neg, nums[i]);
+                }
+            }
+
+            boolean pronadjen = false;
+
+            for(int i = 0; i < nums.length; i++) {
+
+                if((nums[i] != najveci_neg || pronadjen) && nums[i] != 0)
+                    rez *= nums[i];
+
+                if(nums[i] == najveci_neg && !pronadjen)
+                    pronadjen = true;
+            }
+
+
+        }
+
+
+        if (!ima_veci_od_nule && rez == 1)
+            return 0;
+        return rez;
+    }
+
+
+
+   
+
+
+
 }

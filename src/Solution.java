@@ -1508,40 +1508,39 @@ public class Solution {
      */
 
      public ListNode spojiListe(ListNode l1, ListNode l2) {
+        ListNode dummy = new ListNode(-1); 
+        ListNode trenutni = dummy;
 
-        ListNode trenutni1 = l1, trenutni2 = l2;
-        List<Integer>rez = new ArrayList<>();
-
-        while(trenutni1 != null || trenutni2 != null){
-
-            if(trenutni1 == null){
-                
-                rez.add(trenutni2.val);
-                trenutni2 = trenutni2.next;
+        while (l1 != null && l2 != null) {
+            if (l1.val <= l2.val) {
+                trenutni.next = l1;
+                l1 = l1.next;
+            } else {
+                trenutni.next = l2;
+                l2 = l2.next;
             }
-            else if(trenutni2 == null) {
-                rez.add(trenutni1.val);
-                trenutni1 = trenutni1.next;
-            }
-            
-            else {
-
-                if(trenutni1.val <= trenutni2.val) {
-                    rez.add(trenutni1.val);
-                    trenutni1 = trenutni1.next;
-                } else {
-                    rez.add(trenutni2.val);
-                    trenutni2 = trenutni2.next;
-                }
-
-            }
+            trenutni = trenutni.next;
         }
 
-        return rez;
 
+        if (l1 != null)
+            trenutni.next = l1;
+        if (l2 != null)
+            trenutni.next = l2;
 
+        return dummy.next; 
+    }
 
-     }
+    public ListNode mergeKLists(ListNode[] lists) {
+        if (lists.length == 0)
+            return null; 
+        else if (lists.length == 1)
+            return lists[0];
+        else if (lists.length == 2)
+            return spojiListe(lists[0], lists[1]);
+
+        return spojiListe(lists[0], mergeKLists(Arrays.copyOfRange(lists, 1, lists.length))); 
+    }
 
 
 

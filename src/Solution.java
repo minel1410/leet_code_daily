@@ -1858,4 +1858,53 @@ public class Solution {
         return rez;
     }
 
+    /*
+     * 1679
+     * You are given an integer array nums and an integer k.
+     * 
+     * In one operation, you can pick two numbers from the array whose sum equals k
+     * and remove them from the array.
+     * 
+     * Return the maximum number of operations you can perform on the array.
+     */
+    public int maxOperations(int[] nums, int k) {
+
+        List<Integer> lista = new ArrayList<>();
+
+        Arrays.sort(nums);
+
+        for (int num : nums) {
+            lista.add(num); 
+        }
+
+
+        int brojac = 0;
+
+        while(true) {
+            int l = 0;
+            int r = lista.size() - 1;
+            boolean nadjen = false;
+
+            while(l < r) {
+                if(lista.get(l) + lista.get(r) < k) 
+                    l++;
+                else if(lista.get(l) + lista.get(r) > k)
+                    r--;
+                else {
+                    brojac++;
+                    lista.remove(r);
+                    lista.remove(l);
+                    nadjen = true;
+                    break;
+                }
+                
+            }
+
+            if(!nadjen)
+                break;
+        }
+
+        return brojac;
+    }
+
 }

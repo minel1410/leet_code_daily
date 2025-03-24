@@ -1766,4 +1766,31 @@ public class Solution {
         return rez;
     }
 
+    /*
+    1071
+     * For two strings s and t, we say "t divides s" if and only if s = t + t + t +
+     * ... + t + t (i.e., t is concatenated with itself one or more times).
+     * 
+     * Given two strings str1 and str2, return the largest string x such that x
+     * divides both str1 and str2.
+     */
+    public boolean isGcdOfString(String s, String gcd) {
+        if (s.length() % gcd.length() != 0)
+            return false;
+        return gcd.repeat(s.length() / gcd.length()).equals(s);
+    }
+
+    public String gcdOfStrings(String str1, String str2) {
+        if (!(str1 + str2).equals(str2 + str1))
+            return "";
+
+        int gcdLength = gcd(str1.length(), str2.length());
+
+        return str1.substring(0, gcdLength);
+    }
+
+    private int gcd(int a, int b) {
+        return b == 0 ? a : gcd(b, a % b);
+    }
+
 }

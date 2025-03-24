@@ -1595,6 +1595,58 @@ public class Solution {
     }
 
 
+    /*
+     * You are given a positive integer days representing the total number of days
+     * an employee is available for work (starting from day 1). You are also given a
+     * 2D array meetings of size n where, meetings[i] = [start_i, end_i] represents
+     * the starting and ending days of meeting i (inclusive).
+     * 
+     * Return the count of days when the employee is available for work but no
+     * meetings are scheduled.
+     * 
+     * Note: The meetings may overlap.
+     */
+    public static int countDays(int days, int[][] meetings) {
+
+        Arrays.sort(meetings, (a, b) -> Integer.compare(a[0], b[0]));
+
+        for(int i = 0; i < meetings.length; i++) {
+            System.out.print("[" + meetings[i][0] + ", " +  meetings[i][1] + "] ");
+        }
+
+        List<int[]> merged = new ArrayList<>();
+        int[] current = meetings[0]; 
+
+        for (int i = 1; i < meetings.length; i++) {
+            if (current[1] >= meetings[i][0]) { 
+                current[1] = Math.max(current[1], meetings[i][1]); 
+            } else {
+                merged.add(current); 
+                current = meetings[i]; 
+            }
+        }
+        merged.add(current);
+
+        System.out.println();
+
+        for(int i = 0; i < merged.size(); i++){
+            System.err.print(merged.get(i)[0] + " " + merged.get(i)[1] + " ");
+        }
+
+        if(merged.size() > 0)
+            for(int i = 0; i < merged.size(); i++) {
+                days -= (merged.get(i)[1] - merged.get(i)[0] + 1);
+            }
+        else 
+            for (int i = 0; i < meetings.length; i++) {
+                days -= (meetings[0][1] - meetings[0][0] + 1);
+            }
+
+        return days;
+        
+    }
+
+
 
 
 

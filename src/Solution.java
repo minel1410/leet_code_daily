@@ -1793,4 +1793,39 @@ public class Solution {
         return b == 0 ? a : gcd(b, a % b);
     }
 
+    /*
+     * 1394
+     * Given an array of integers arr, a lucky integer is an integer that has a
+     * frequency in the array equal to its value.
+     * 
+     * Return the largest lucky integer in the array. If there is no lucky integer
+     * return -1.
+     */
+
+     public int findLucky(int[] arr) {
+
+        HashMap<Integer, Integer>mapa = new HashMap<>();
+
+        for(int num : arr) {
+            mapa.put(num, mapa.getOrDefault(num, 0) + 1);
+        }
+
+        HashSet<Integer>set = new HashSet<>();
+
+        for(int i = 0; i < arr.length; i++)
+            set.add(arr[i]);
+
+        int najveci_lucky = -1;
+
+        for(int key : set) {
+            int count = mapa.get(key);
+
+            if (key == count)
+                najveci_lucky = Math.max(najveci_lucky, count);
+        }
+
+        return najveci_lucky;
+
+    }
+
 }

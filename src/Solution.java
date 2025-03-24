@@ -1723,4 +1723,47 @@ public class Solution {
         return rez;
     }
 
+    /*
+     * 1768
+     * You are given two strings word1 and word2. Merge the strings by adding
+     * letters in alternating order, starting with word1. If a string is longer than
+     * the other, append the additional letters onto the end of the merged string.
+     * 
+     * Return the merged string.
+     */
+    public String mergeAlternately(String word1, String word2) {
+
+        int c1 = 0, c2 = 0;
+        String rez = "";
+
+        while(true) {
+            if(c1 < word1.length()) {
+
+                rez += word1.charAt(c1);
+                c1++;
+
+                if(c2 < word2.length()) {
+                    rez += word2.charAt(c2);
+                    c2++;
+                }
+                else {
+                    rez += word1.substring(c1);
+                    break;
+                }
+                    
+
+
+
+            } else if( c2 < word2.length()) {
+                rez += word2.substring(c2);
+                break;
+            }
+                
+
+             else break;
+        }
+
+        return rez;
+    }
+
 }

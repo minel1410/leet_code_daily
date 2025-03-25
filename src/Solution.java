@@ -1907,4 +1907,68 @@ public class Solution {
         return brojac;
     }
 
+    /*
+     * 3394
+     * You are given an integer n representing the dimensions of an n x n grid, with
+     * the origin at the bottom-left corner of the grid. You are also given a 2D
+     * array of coordinates rectangles, where rectangles[i] is in the form [startx,
+     * starty, endx, endy], representing a rectangle on the grid. Each rectangle is
+     * defined as follows:
+     * 
+     * (startx, starty): The bottom-left corner of the rectangle.
+     * (endx, endy): The top-right corner of the rectangle.
+     * Note that the rectangles do not overlap. Your task is to determine if it is
+     * possible to make either two horizontal or two vertical cuts on the grid such
+     * that:
+     * 
+     * Each of the three resulting sections formed by the cuts contains at least one
+     * rectangle.
+     * Every rectangle belongs to exactly one section.
+     * Return true if such cuts can be made; otherwise, return false.
+     */
+
+     public boolean checkValidCuts(int n, int[][] rectangles) {
+
+        int[][] sorted_x = Arrays.copyOf(rectangles, rectangles.length);
+        int[][] sorted_y = Arrays.copyOf(rectangles, rectangles.length);
+
+        Arrays.sort(sorted_x, (a, b) -> {
+            if (a[0] != b[0])
+                return Integer.compare(a[0], b[0]);
+            return Integer.compare(a[1], b[1]);
+        });
+
+        for(int i = 0; i < sorted_x.length; i++) {
+            System.out.print("["+ sorted_x[i][0] + " " + sorted_x[i][1] + " " + sorted_x[i][2] + " "
+                    + sorted_x[i][3] + "]");
+        }
+
+        Arrays.sort(sorted_y, (a, b) -> {
+            if (a[1] != b[1])
+                return Integer.compare(a[1], b[1]);
+            return Integer.compare(a[0], b[0]);
+        });
+        System.out.println();
+        int cuts = 0;
+        for (int i = 0; i < sorted_x.length - 1; i++) {
+            if (sorted_x[i][2] <= sorted_x[i + 1][0]) {
+                cuts++;
+                System.out.println("PRvi cut nadjen na: " + sorted_x[i][2]);
+            }
+            if(cuts == 2)
+                return true;
+        }
+
+        cuts = 0;;
+        for (int i = 0; i < sorted_y.length - 1; i++) {
+            if (sorted_y[i][3] <= sorted_y[i + 1][1]) {
+                cuts++;
+            }
+            if(cuts == 2)
+                return true;
+        }
+
+        return false;
+    }
+
 }

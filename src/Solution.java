@@ -1971,4 +1971,63 @@ public class Solution {
         return false;
     }
 
+    /*
+     * 2033
+     * You are given a 2D integer grid of size m x n and an integer x. In one
+     * operation, you can add x to or subtract x from any element in the grid.
+     * 
+     * A uni-value grid is a grid where all the elements of it are equal.
+     * 
+     * Return the minimum number of operations to make the grid uni-value. If it is
+     * not possible, return -1.
+     */
+
+     public int minOperations(int[][] grid, int x) {
+        int mod = grid[0][0] % x;
+        List<Integer> adjusted = new ArrayList<>();
+
+        for (int[] row : grid) {
+            for (int num : row) {
+                if (num % x != mod)
+                    return -1;
+                adjusted.add((num - mod) / x);
+            }
+        }
+
+        int median = findMedian(adjusted);
+
+        int operations = 0;
+        for (int val : adjusted) {
+            operations += Math.abs(val - median);
+        }
+
+        return operations;
+    }
+
+    private int findMedian(List<Integer> list) {
+        int min = Integer.MAX_VALUE;
+        int max = Integer.MIN_VALUE;
+        for (int num : list) {
+            min = Math.min(min, num);
+            max = Math.max(max, num);
+        }
+
+        int[] freq = new int[max - min + 1];
+        for (int num : list) {
+            freq[num - min]++;
+        }
+
+        int total = list.size();
+        int count = 0;
+        int median = min;
+        for (int i = 0; i < freq.length; i++) {
+            count += freq[i];
+            if (count > total / 2) {
+                median = min + i;
+                break;
+            }
+        }
+
+        return median;
+    }
 }

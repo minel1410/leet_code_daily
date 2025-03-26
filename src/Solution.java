@@ -6,6 +6,8 @@ package src;
 import java.lang.Math;
 import java.util.*;
 
+import javax.swing.tree.TreeNode;
+
 public class Solution {
 
     private int[] brojevi;
@@ -2029,5 +2031,50 @@ public class Solution {
         }
 
         return median;
+    }
+
+
+    public class TreeNode {
+        int val;
+        TreeNode left;
+        TreeNode right;
+
+        TreeNode() {
+        }
+
+        TreeNode(int val) {
+            this.val = val;
+        }
+
+        TreeNode(int val, TreeNode left, TreeNode right) {
+            this.val = val;
+            this.left = left;
+            this.right = right;
+        }
+    }
+    
+
+    /*
+     * 814
+     * Given the root of a binary tree, return the same tree where every subtree (of
+     * the given tree) not containing a 1 has been removed.
+     * 
+     * A subtree of a node node is node plus every node that is a descendant of
+     * node.
+     */
+
+    public TreeNode pruneTree(TreeNode node) {
+        if (node == null) {
+            return null;
+        }
+
+        node.left = pruneTree(node.left);
+        node.right = pruneTree(node.right);
+
+        if (node.val == 0 && node.left == null && node.right == null) {
+            return null;
+        }
+
+        return node; 
     }
 }

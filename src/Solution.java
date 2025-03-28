@@ -1116,7 +1116,7 @@ public class Solution {
 
 
     //NOTE: this code was made with the help of code generation tools
-    public static class DSU {
+    /* public static class DSU {
         public int[] rank, parent, andValue;
 
         public DSU(int n) {
@@ -1157,7 +1157,7 @@ public class Solution {
                 andValue[rootU] &= weight;
             }
         }
-    }
+    } */
 
     public int[] minimumCost(int n, int[][] edges, int[][] query) {
         DSU dsu = new DSU(n);
@@ -2133,5 +2133,135 @@ public class Solution {
         }
 
         return -1;
+    }
+
+
+    /*
+     * You are given an m x n integer matrix grid and an array queries of size k.
+     * 
+     * Find an array answer of size k such that for each integer queries[i] you
+     * start in the top left cell of the matrix and repeat the following process:
+     * 
+     * If queries[i] is strictly greater than the value of the current cell that you
+     * are in, then you get one point if it is your first time visiting this cell,
+     * and you can move to any adjacent cell in all 4 directions: up, down, left,
+     * and right.
+     * Otherwise, you do not get any points, and you end this process.
+     * After the process, answer[i] is the maximum number of points you can get.
+     * Note that for each query you are allowed to visit the same cell multiple
+     * times.
+     * 
+     * Return the resulting array answer.
+     */
+
+    public int[] maxPoints(int[][] grid, int[] queries) {
+        int m = grid.length;
+        int n = grid[0].length;
+        int totalCells = m * n;
+        List<int[]> cells = new ArrayList<>();
+        for (int i = 0; i < m; i++) {
+            for (int j = 0; j < n; j++) {
+                cells.add(new int[] { grid[i][j], i, j });
+            }
+        }
+        cells.sort((a, b) -> Integer.compare(a[0], b[0]));
+
+        TreeMap<Integer, List<int[]>> groups = new TreeMap<>();
+        for (int[] cell : cells) {
+            int val = cell[0];
+            groups.computeIfAbsent(val, k -> new ArrayList<>()).add(new int[] { cell[1], cell[2] });
+        }
+
+        DSU dsu = new DSU(totalCells);
+        boolean[] processed = new boolean[totalCells];
+        List<int[]> events = new ArrayList<>();
+
+        for (int val : groups.keySet()) {
+            List<int[]> group = groups.get(val);
+            for (int[] pos : group) {
+                int i = pos[0], j = pos[1];
+                int idx = i * n + j;
+                processed[idx] = true;
+                for (int[] dir : new int[][] { { -1, 0 }, { 1, 0 }, { 0, -1 }, { 0, 1 } }) {
+                    int ni = i + dir[0];
+                    int nj = j + dir[1];
+                    if (ni >= 0 && ni < m && nj >= 0 && nj < n) {
+                        int nidx = ni * n + nj;
+                        if (processed[nidx]) {
+                            dsu.union(idx, nidx);
+                        }
+                    }
+                }
+            }
+            int startIdx = 0 * n + 0;
+            int componentSize = 0;
+            if (processed[startIdx]) {
+                componentSize = dsu.size[dsu.find(startIdx)];
+            }
+            events.add(new int[] { val, componentSize });
+        }
+
+        int[] answer = new int[queries.length];
+        int startVal = grid[0][0];
+        for (int k = 0; k < queries.length; k++) {
+            int q = queries[k];
+            if (startVal >= q) {
+                answer[k] = 0;
+                continue;
+            }
+            int left = 0, right = events.size() - 1;
+            int best = -1;
+            while (left <= right) {
+                int mid = left + (right - left) / 2;
+                int currVal = events.get(mid)[0];
+                if (currVal < q) {
+                    best = mid;
+                    left = mid + 1;
+                } else {
+                    right = mid - 1;
+                }
+            }
+            if (best == -1) {
+                answer[k] = 0;
+            } else {
+                answer[k] = events.get(best)[1];
+            }
+        }
+        return answer;
+    }
+
+    static class DSU {
+        int[] parent;
+        int[] size;
+
+        public DSU(int n) {
+            parent = new int[n];
+            size = new int[n];
+            for (int i = 0; i < n; i++) {
+                parent[i] = i;
+                size[i] = 1;
+            }
+        }
+
+        public int find(int x) {
+            if (parent[x] != x) {
+                parent[x] = find(parent[x]);
+            }
+            return parent[x];
+        }
+
+        public void union(int u, int v) {
+            int rootU = find(u);
+            int rootV = find(v);
+            if (rootU != rootV) {
+                if (size[rootU] < size[rootV]) {
+                    int temp = rootU;
+                    rootU = rootV;
+                    rootV = temp;
+                }
+                parent[rootV] = rootU;
+                size[rootU] += size[rootV];
+            }
+        }
     }
 }

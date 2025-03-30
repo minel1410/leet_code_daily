@@ -2411,8 +2411,6 @@ public class Solution {
      * 
      * Note that the partition is done so that after concatenating all the parts in
      * order, the resultant string should be s.
-     * 
-     * Return a list of integers representing the size of these parts.
      */
 
     public List<Integer> partitionLabels(String s) {

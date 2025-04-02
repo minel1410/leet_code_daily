@@ -2515,6 +2515,35 @@ public class Solution {
         return dp[0];
         
     }
+
+    /*
+     * You are given a 0-indexed integer array nums.
+     * 
+     * Return the maximum value over all triplets of indices (i, j, k) such that i <
+     * j < k. If all such triplets have a negative value, return 0.
+     * 
+     * The value of a triplet of indices (i, j, k) is equal to (nums[i] - nums[j]) *
+     * nums[k].
+     */
+
+     public long maximumTripletValue(int[] nums) {
+
+        long max_val = 0;
+
+        for(int i = 0; i < nums.length; i++) {
+            for(int j = i+1; j < nums.length; j++) {
+                for(int k = j+1; k < nums.length; k++) {
+                    long val = (long)(nums[i] - nums[j]) * nums[k];
+                    max_val = Math.max(max_val, val);
+                }
+            }
+        }
+
+        return max_val;
+
+    }
+
+
 }
 
 

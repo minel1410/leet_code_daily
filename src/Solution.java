@@ -2526,7 +2526,7 @@ public class Solution {
      * nums[k].
      */
 
-     public long maximumTripletValue(int[] nums) {
+     public long maximumTripletValueFast(int[] nums) {
 
         long max_val = 0;
 
@@ -2542,7 +2542,41 @@ public class Solution {
         return max_val;
 
     }
+    
+    public long maximumTripletValueFast(int[] nums) {
 
+            int n = nums.length;
+            int[] prefix_sum = new int[n];
+            int[] sufix_sum = new int[n];
+
+            int max_prefix = nums[0];
+            prefix_sum[0] = max_prefix;
+            for(int i = 1; i < n; i++) {
+
+                if(nums[i] > max_prefix) {
+                    max_prefix = nums[i];
+                }
+                prefix_sum[i] = max_prefix;
+
+            }
+
+            int max_sufix = nums[n-1];
+            for(int i = n-1; i >= 0; i--) {
+                if (nums[i] > max_sufix) {
+                    max_sufix = nums[i];
+                }
+                sufix_sum[i] = max_sufix;
+            }
+
+            long max_combo = 0;
+
+            for(int i = 1; i < n - 1; i++) {
+                long val = (long)((prefix_sum[i-1] - nums[i]) * sufix_sum[i+1]);
+                max_combo = Math.max(max_combo, val);
+            }
+
+            return max_combo;
+    }
 
 }
 

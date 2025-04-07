@@ -2578,6 +2578,39 @@ public class Solution {
             return max_combo;
     }
 
+    /*
+     * Given an integer array nums, return true if you can partition the array into
+     * two subsets such that the sum of the elements in both subsets is equal or
+     * false otherwise.
+     */
+
+     public boolean canPartition(int[] nums) {
+
+        int suma = 0;
+        int n = nums.length;
+        
+        for(int i = 0; i < n; i++)
+            suma += nums[i];
+
+        if(suma % 2 != 0)
+            return false;
+
+        boolean[] dp = new boolean[suma / 2 + 1];
+
+        dp[0] = true;
+
+
+        for (int i = 0; i < n; i++) {
+
+            for (int j = dp.length - 1; j >= nums[i]; j--) {
+                dp[j] = dp[j] || dp[j - nums[i]]; 
+            }
+        }
+        return dp[suma/2];
+
+
+    }
+
 }
 
 
